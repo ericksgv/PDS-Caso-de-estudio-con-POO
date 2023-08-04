@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
 import puj.pdscaso_de_estudio_con_poo.main;
 
@@ -15,7 +16,11 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class Agendar implements Initializable {
 
@@ -45,6 +50,19 @@ public class Agendar implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        initDatePicker();
+        initHourSpinner();
+
+        txtCedula.setTextFormatter(verificarCampoNumerico());
+        txtNombres.setTextFormatter(verificarCampoAlfabetico());
+        txtApellidos.setTextFormatter(verificarCampoAlfabetico());
+        txtEdad.setTextFormatter(verificarCampoNumerico());
+    }
+
+
+
+    private void initDatePicker() {
         // Obtener la fecha actual
         LocalDate fechaActual = LocalDate.now();
 
@@ -58,11 +76,34 @@ public class Agendar implements Initializable {
                 setDisable(empty || date.isBefore(fechaActual));
             }
         });
+    }
 
-
+    private void initHourSpinner() {
         // Configurar el Spinner para trabajar con LocalTime y formato AM/PM
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
         SpinnerValueFactory<LocalTime> valueFactory = new SpinnerValueFactory<>() {
+            {
+                setConverter(new StringConverter<LocalTime>() {
+                    @Override
+                    public String toString(LocalTime time) {
+                        if (time == null) {
+                            return "";
+                        }
+                        return timeFormatter.format(time);
+                    }
+
+                    @Override
+                    public LocalTime fromString(String string) {
+                        try {
+                            return LocalTime.parse(string, timeFormatter);
+                        } catch (DateTimeParseException e) {
+                            return getValue(); // Restaurar el valor anterior si el formato es inválido
+                        }
+                    }
+                });
+                setWrapAround(true); // Permite que el Spinner vuelva a comenzar después de llegar al final
+            }
+
             @Override
             public void decrement(int steps) {
                 if (getValue() == null) {
@@ -82,25 +123,99 @@ public class Agendar implements Initializable {
                     setValue(time);
                 }
             }
-
-
-            {
-                setConverter(new LocalTimeStringConverter(timeFormatter, null));
-                setWrapAround(true); // Permite que el Spinner vuelva a comenzar después de llegar al final
-            }
         };
         spnHora.setValueFactory(valueFactory);
         spnHora.setEditable(true);
+    }
 
+
+
+
+    private TextFormatter<String> verificarCampoNumerico(){
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            if (!change.getControlNewText().matches("\\d*")) {
+                // Si el cambio contiene caracteres que no son números, rechazar el cambio
+                return null;
+            }
+            return change; // Aceptar el cambio
+        };
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+        return textFormatter;
+    }
+
+    private TextFormatter<String> verificarCampoAlfabetico(){
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            if (!change.getControlNewText().matches("[a-zA-Z]*")) {
+                // Si el cambio contiene caracteres que no son letras, rechazar el cambio
+                return null;
+            }
+            return change; // Aceptar el cambio
+        };
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+        return textFormatter;
     }
 
     @FXML
-    void registrarCita(MouseEvent event) {
+    private void registrarCita(MouseEvent event) {
 
+        if(!verificarCampos()){
+            alerta(Alert.AlertType.ERROR, "Por favor, ingrese todos los datos");
+        }
+        else if(!verificarCamposFechaHora()){
+            alerta(Alert.AlertType.ERROR, "Por favor, ingrese una fecha y hora válidas");
+        }
+        else{
+            alerta(Alert.AlertType.CONFIRMATION, "Cita registrada con éxito");
+
+        }
     }
 
+    private boolean verificarCampos() {
+        if (txtCedula.getText().isEmpty() || txtNombres.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtEdad.getText().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+    private boolean verificarCamposFechaHora() {
+        String fechaText = dpFecha.getEditor().getText();
+        String horaText = spnHora.getEditor().getText().trim(); // Eliminar espacios al principio y al final
+
+        // Verificar la hora con regex y parse
+        if (!horaText.matches("\\d{1,2}:\\d{2}\\s?(?i)(a\\.?m?\\.?|p\\.?m?\\.?)?")) {
+            // El formato de hora no es válido (debe ser hh:mm a.m. o hh:mm p.m. o hh:mm am o hh:mm pm)
+            return false;
+        }
+
+        // Si pasa todas las validaciones, los campos de fecha y hora son válidos
+        return true;
+    }
+
+
+
+    private void alerta(Alert.AlertType tipoAlerta, String mensaje) {
+        Alert alert = new Alert(tipoAlerta);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+
+        // Mostrar el diálogo y esperar a que el usuario interactúe con él
+        Optional<ButtonType> resultado = alert.showAndWait();
+
+        // Verificar el resultado dependiendo del tipo de alerta
+         if (tipoAlerta == Alert.AlertType.CONFIRMATION) {
+            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                // El usuario seleccionó "Aceptar"
+                limpiarCampos();
+            }
+        }
+    }
+
+
     @FXML
-    void regresar(MouseEvent event) throws IOException {
+    private void regresar(MouseEvent event) throws IOException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("agendamiento-citas.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
@@ -108,6 +223,15 @@ public class Agendar implements Initializable {
         stage.setScene(scene);
         stage.show();
         this.btnRegresar.getScene().getWindow().hide();
+    }
+
+    public void limpiarCampos() {
+        txtCedula.setText("");
+        txtNombres.setText("");
+        txtApellidos.setText("");
+        txtEdad.setText("");
+        dpFecha.setValue(null);
+        spnHora.setValueFactory(null);
     }
 
 }
