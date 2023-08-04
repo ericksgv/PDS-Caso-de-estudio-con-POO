@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import javafx.util.converter.LocalTimeStringConverter;
 import puj.pdscaso_de_estudio_con_poo.main;
 
 import java.io.IOException;
