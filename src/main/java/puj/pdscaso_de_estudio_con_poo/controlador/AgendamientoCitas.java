@@ -16,6 +16,10 @@ public class AgendamientoCitas {
     private Button btnAgendar;
 
     @FXML
+    private Button btnBuscar;
+
+
+    @FXML
     void agendar(MouseEvent event) throws IOException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("agendar.fxml"));
@@ -34,7 +38,7 @@ public class AgendamientoCitas {
         stage.setTitle("Agendamiento de Citas");
         stage.setScene(scene);
         stage.show();
-        this.btnAgendar.getScene().getWindow().hide();
+        this.btnBuscar.getScene().getWindow().hide();
     }
 
 }
