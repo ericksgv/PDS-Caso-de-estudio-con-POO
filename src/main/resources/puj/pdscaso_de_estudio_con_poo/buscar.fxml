@@ -48,10 +48,11 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="267.0" prefWidth="500.0">
                <children>
-                  <TableView fx:id="tbCitas" prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="tbCitas" prefHeight="218.0" prefWidth="506.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
+                      <TableColumn prefWidth="75.0" text="Cédula" />
+                      <TableColumn prefWidth="75.0" text="Nombres" />
+                       <TableColumn prefWidth="75.0" text="Hora" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
