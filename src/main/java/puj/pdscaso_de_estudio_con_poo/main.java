@@ -7,10 +7,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("agendamiento-citas.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("agendamiento-citas.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Agendamiento de Citas");
         stage.setScene(scene);
