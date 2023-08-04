@@ -8,8 +8,8 @@
    <children>
       <HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="100.0">
          <children>
-            <Button fx:id="btnAgendar1" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#agendar" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #80bde0;" text="Agendar" textAlignment="CENTER" />
             <Button fx:id="btnAgendar" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#agendar" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #80bde0;" text="Agendar" textAlignment="CENTER" />
+            <Button fx:id="btnAgendar" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#buscar" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #80bde0;" text="Buscar" textAlignment="CENTER" />
          </children>
       </HBox>
    </children>

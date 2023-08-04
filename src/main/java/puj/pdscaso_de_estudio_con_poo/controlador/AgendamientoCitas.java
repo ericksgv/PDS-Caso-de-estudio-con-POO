@@ -14,4 +14,9 @@ public class AgendamientoCitas {
 
     }
 
+    @FXML
+    void buscar(MouseEvent event) {
+
+    }
+
 }
