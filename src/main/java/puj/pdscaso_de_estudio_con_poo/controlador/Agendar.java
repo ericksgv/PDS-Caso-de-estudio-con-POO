@@ -5,8 +5,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 public class Agendar {
+
+    @FXML
+    private Button btnRegistrar;
 
     @FXML
     private Button btnRegresar;
@@ -28,5 +32,15 @@ public class Agendar {
 
     @FXML
     private TextField txtNombres;
+
+    @FXML
+    void registrarCita(MouseEvent event) {
+
+    }
+
+    @FXML
+    void regresar(MouseEvent event) {
+
+    }
 
 }
