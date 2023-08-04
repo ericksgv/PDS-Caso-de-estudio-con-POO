@@ -7,12 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalTimeStringConverter;
 import puj.pdscaso_de_estudio_con_poo.main;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class Agendar implements Initializable {
@@ -57,6 +59,38 @@ public class Agendar implements Initializable {
             }
         });
 
+
+        // Configurar el Spinner para trabajar con LocalTime y formato AM/PM
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+        SpinnerValueFactory<LocalTime> valueFactory = new SpinnerValueFactory<>() {
+            @Override
+            public void decrement(int steps) {
+                if (getValue() == null) {
+                    setValue(LocalTime.now());
+                } else {
+                    LocalTime time = getValue().minusMinutes(steps);
+                    setValue(time);
+                }
+            }
+
+            @Override
+            public void increment(int steps) {
+                if (getValue() == null) {
+                    setValue(LocalTime.now());
+                } else {
+                    LocalTime time = getValue().plusMinutes(steps);
+                    setValue(time);
+                }
+            }
+
+
+            {
+                setConverter(new LocalTimeStringConverter(timeFormatter, null));
+                setWrapAround(true); // Permite que el Spinner vuelva a comenzar después de llegar al final
+            }
+        };
+        spnHora.setValueFactory(valueFactory);
+        spnHora.setEditable(true);
 
     }
 
