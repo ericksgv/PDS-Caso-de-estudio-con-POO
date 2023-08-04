@@ -2,18 +2,20 @@ package puj.pdscaso_de_estudio_con_poo.controlador;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import puj.pdscaso_de_estudio_con_poo.main;
 
 import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ResourceBundle;
 
-public class Agendar {
+public class Agendar implements Initializable {
 
     @FXML
     private Button btnRegistrar;
@@ -25,7 +27,7 @@ public class Agendar {
     private DatePicker dpFecha;
 
     @FXML
-    private Spinner<?> spnHora;
+    private Spinner<LocalTime> spnHora;
 
     @FXML
     private TextField txtApellidos;
@@ -38,6 +40,25 @@ public class Agendar {
 
     @FXML
     private TextField txtNombres;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Obtener la fecha actual
+        LocalDate fechaActual = LocalDate.now();
+
+        // Establecer la fecha actual como valor mínimo del DatePicker
+        dpFecha.setValue(fechaActual);
+
+        dpFecha.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(fechaActual));
+            }
+        });
+
+
+    }
 
     @FXML
     void registrarCita(MouseEvent event) {
