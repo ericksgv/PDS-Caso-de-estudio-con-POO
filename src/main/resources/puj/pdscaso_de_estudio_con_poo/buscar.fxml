@@ -50,9 +50,9 @@
                <children>
                   <TableView fx:id="tbCitas" prefHeight="218.0" prefWidth="506.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="Cédula" />
-                      <TableColumn prefWidth="75.0" text="Nombres" />
-                       <TableColumn prefWidth="75.0" text="Hora" />
+                      <TableColumn prefWidth="75.0" fx:id="cedulaCol" text="Cédula" />
+                      <TableColumn prefWidth="75.0" fx:id="nombreCol" text="Nombres" />
+                       <TableColumn prefWidth="75.0" fx:id="horaCol" text="Hora" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -1,20 +1,21 @@
 package puj.pdscaso_de_estudio_con_poo.modelo;
 
 public class Usuario {
-    int cedula;
+    String cedula;
     String nombres;
     String apellidos;
     int edad;
 
     public Usuario() {}
-    public Usuario(int cedula, String nombres, String apellidos, int edad) {
+
+    public Usuario(String cedula, String nombres, String apellidos, int edad) {
         this.cedula = cedula;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.edad = edad;
     }
 
-    public int getCedula() {
+    public String getCedula() {
         return cedula;
     }
 
@@ -30,7 +31,7 @@ public class Usuario {
         return edad;
     }
 
-    public void setCedula(int cedula) {
+    public void setCedula(String cedula) {
         this.cedula = cedula;
     }
 

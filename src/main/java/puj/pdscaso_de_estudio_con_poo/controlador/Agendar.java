@@ -9,7 +9,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import puj.pdscaso_de_estudio_con_poo.main;
-
+import puj.pdscaso_de_estudio_con_poo.modelo.Cita;
+import puj.pdscaso_de_estudio_con_poo.modelo.Usuario;
+import java.util.logging.Logger;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -22,6 +24,8 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 public class Agendar implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(Agendar.class.getName());
 
     @FXML
     private Button btnRegistrar;
@@ -58,8 +62,6 @@ public class Agendar implements Initializable {
         txtApellidos.setTextFormatter(verificarCampoAlfabetico());
         txtEdad.setTextFormatter(verificarCampoNumerico());
     }
-
-
 
     private void initDatePicker() {
         // Obtener la fecha actual
@@ -127,9 +129,6 @@ public class Agendar implements Initializable {
         spnHora.setEditable(true);
     }
 
-
-
-
     private TextFormatter<String> verificarCampoNumerico(){
         UnaryOperator<TextFormatter.Change> filter = change -> {
             if (!change.getControlNewText().matches("\\d*")) {
@@ -154,29 +153,12 @@ public class Agendar implements Initializable {
         return textFormatter;
     }
 
-    @FXML
-    private void registrarCita(MouseEvent event) {
-
-        if(!verificarCampos()){
-            alerta(Alert.AlertType.ERROR, "Por favor, ingrese todos los datos");
-        }
-        else if(!verificarCamposFechaHora()){
-            alerta(Alert.AlertType.ERROR, "Por favor, ingrese una fecha y hora válidas");
-        }
-        else{
-            alerta(Alert.AlertType.CONFIRMATION, "Cita registrada con éxito");
-
-        }
-    }
-
     private boolean verificarCampos() {
         if (txtCedula.getText().isEmpty() || txtNombres.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtEdad.getText().isEmpty()) {
             return false;
         }
         return true;
     }
-
-
 
     private boolean verificarCamposFechaHora() {
         String fechaText = dpFecha.getEditor().getText();
@@ -191,8 +173,6 @@ public class Agendar implements Initializable {
         // Si pasa todas las validaciones, los campos de fecha y hora son válidos
         return true;
     }
-
-
 
     private void alerta(Alert.AlertType tipoAlerta, String mensaje) {
         Alert alert = new Alert(tipoAlerta);
@@ -211,7 +191,6 @@ public class Agendar implements Initializable {
             }
         }
     }
-
 
     @FXML
     private void regresar(MouseEvent event) throws IOException {
@@ -233,4 +212,38 @@ public class Agendar implements Initializable {
         spnHora.setValueFactory(null);
     }
 
+    @FXML
+    private void registrarCita(MouseEvent event) {
+
+        if(!verificarCampos()){
+            alerta(Alert.AlertType.ERROR, "Por favor, ingrese todos los datos");
+        }
+        else if(!verificarCamposFechaHora()){
+            alerta(Alert.AlertType.ERROR, "Por favor, ingrese una fecha y hora válidas");
+        }
+        else{
+            String cedula = txtCedula.getText();
+            String nombres = txtNombres.getText();
+            String apellidos = txtApellidos.getText();
+            String edadStr = txtEdad.getText();
+            int edad = Integer.parseInt(edadStr);
+
+
+            // Crear el objeto Usuario
+            Usuario usuario = new Usuario(cedula, nombres, apellidos, edad);
+            System.out.println(usuario);
+
+            // Obtener la fecha y hora de la cita
+            String fechaCita = String.valueOf(dpFecha.getValue());
+            String horaCita = String.valueOf(spnHora.getValue());
+
+            // Crear el objeto Cita
+            Cita cita = new Cita(usuario, fechaCita, horaCita);
+
+            // Registrar la cita
+            cita.registrarCita();
+
+            alerta(Alert.AlertType.CONFIRMATION, "Cita registrada con éxito");
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package puj.pdscaso_de_estudio_con_poo.controlador;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,9 +14,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import puj.pdscaso_de_estudio_con_poo.main;
 import puj.pdscaso_de_estudio_con_poo.modelo.Cita;
+import puj.pdscaso_de_estudio_con_poo.modelo.CitaData;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Buscar implements Initializable {
@@ -27,22 +30,43 @@ public class Buscar implements Initializable {
     private Button btnRegresar;
 
     @FXML
-    private ComboBox<Cita> cbFechasCitas;
+    private ComboBox<String> cbFechasCitas;
 
     @FXML
-    private TableView<?> tbCitas;
+    private TableView<CitaData> tbCitas;
+
+    @FXML
+    private TableColumn<CitaData, String> cedulaCol;
+
+    @FXML
+    private TableColumn<CitaData, String> nombreCol;
+
+    @FXML
+    private TableColumn<CitaData, String> horaCol;
+
+    private ObservableList<CitaData> citasObservableList;
+
+    public Buscar() {
+    }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        CitaData citaData = new CitaData();
+        citaData.colocarFechaComboBox(cbFechasCitas);
 
-
-
+        citasObservableList = tbCitas.getItems();
     }
 
     @FXML
     void buscar(MouseEvent event) {
-
+        CitaData citaData = new CitaData();
+        String subdirectorioSeleccionado = cbFechasCitas.getValue();
+        if (subdirectorioSeleccionado != null) {
+            List<CitaData> citas = citaData.cargarCitasDesdeDirectorio(subdirectorioSeleccionado);
+            citasObservableList.clear();
+            citasObservableList.addAll(citas);
+        }
     }
 
     @FXML
@@ -55,5 +79,4 @@ public class Buscar implements Initializable {
         stage.show();
         this.btnRegresar.getScene().getWindow().hide();
     }
-
 }
