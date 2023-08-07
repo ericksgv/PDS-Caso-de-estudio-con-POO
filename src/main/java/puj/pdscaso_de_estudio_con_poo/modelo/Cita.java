@@ -59,7 +59,7 @@ public class Cita {
         String fechaFormateada = fechaCitaParsed.format(formatter);
 
         // Crear el directorio con la fecha actual si no existe
-        String rutaDirectorio = "D:\\Registro Citas Medicas" + File.separator + fechaFormateada;
+        String rutaDirectorio = "C:\\Registro Citas Medicas" + File.separator + fechaFormateada;
         File directorio = new File(rutaDirectorio);
         if (!directorio.exists()) {
             directorio.mkdirs();

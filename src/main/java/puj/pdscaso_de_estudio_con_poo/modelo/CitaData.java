@@ -1,6 +1,7 @@
 package puj.pdscaso_de_estudio_con_poo.modelo;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import javafx.scene.control.ComboBox;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -52,7 +53,7 @@ public class CitaData {
     }
 
     public void colocarFechaComboBox(ComboBox<String> comboBox) {
-        File directory = new File("D:\\Registro Citas Medicas");
+        File directory = new File("C:\\Registro Citas Medicas");
         if (directory.exists() && directory.isDirectory()) {
             File[] subdirectories = directory.listFiles(File::isDirectory);
             if (subdirectories != null) {
@@ -71,14 +72,20 @@ public class CitaData {
     public List<CitaData> cargarCitasDesdeDirectorio(String subdirectorio) {
         List<CitaData> citas = new ArrayList<>();
 
-        File directorio = new File("D:\\Registro Citas Medicas\\" + subdirectorio);
+        File directorio = new File("C:\\Registro Citas Medicas\\" + subdirectorio);
         if (directorio.exists() && directorio.isDirectory()) {
             File[] archivosJson = directorio.listFiles((dir, name) -> name.endsWith(".json"));
             if (archivosJson != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 for (File archivoJson : archivosJson) {
                     try {
-                        CitaData cita = objectMapper.readValue(archivoJson, CitaData.class);
+                        JsonNode jsonNode = objectMapper.readTree(archivoJson);
+                        JsonNode usuarioNode = jsonNode.get("usuario");
+
+                        CitaData cita = new CitaData();
+                        cita.setCedula(usuarioNode.get("cedula").asText());
+                        cita.setNombre(usuarioNode.get("nombres").asText());
+                        cita.setHora(jsonNode.get("hora").asText());
                         citas.add(cita);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -89,4 +96,5 @@ public class CitaData {
 
         return citas;
     }
+
 }

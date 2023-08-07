@@ -54,7 +54,6 @@ public class Buscar implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         CitaData citaData = new CitaData();
         citaData.colocarFechaComboBox(cbFechasCitas);
-
         citasObservableList = tbCitas.getItems();
     }
 
@@ -66,6 +65,9 @@ public class Buscar implements Initializable {
             List<CitaData> citas = citaData.cargarCitasDesdeDirectorio(subdirectorioSeleccionado);
             citasObservableList.clear();
             citasObservableList.addAll(citas);
+            cedulaCol.setCellValueFactory(new PropertyValueFactory<>("cedula"));
+            nombreCol.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+            horaCol.setCellValueFactory(new PropertyValueFactory<>("hora"));
         }
     }
 
