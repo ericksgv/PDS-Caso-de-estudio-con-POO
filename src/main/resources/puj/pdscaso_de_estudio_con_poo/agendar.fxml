@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="puj.pdscaso_de_estudio_con_poo.controlador.Agendar">
    <children>
       <VBox prefHeight="400.0" prefWidth="600.0">

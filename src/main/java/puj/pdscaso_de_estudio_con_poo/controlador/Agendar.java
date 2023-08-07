@@ -143,7 +143,7 @@ public class Agendar implements Initializable {
 
     private TextFormatter<String> verificarCampoAlfabetico(){
         UnaryOperator<TextFormatter.Change> filter = change -> {
-            if (!change.getControlNewText().matches("[a-zA-Z]*")) {
+            if (!change.getControlNewText().matches("[a-zA-Z ]*")) {
                 // Si el cambio contiene caracteres que no son letras, rechazar el cambio
                 return null;
             }
